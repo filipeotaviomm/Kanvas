@@ -30,11 +30,13 @@ class ContentIdView(RetrieveUpdateDestroyAPIView):
     serializer_class = ContentSerializer
 
     def get_object(self):
-        content = Content.objects.filter(id=self.kwargs["content_id"])
-        course = Course.objects.filter(id=self.kwargs["course_id"])
+        content = Content.objects.filter(id=self.kwargs["content_id"]).first()
         if not content:
             raise NotFound("content not found.")
+        course = Course.objects.filter(id=self.kwargs["course_id"]).first()
         if not course:
             raise NotFound("course not found.")
-        self.check_object_permissions(self.request, content.first())
-        return content.first()
+        if not content in course.contents.all():
+            raise NotFound("content not found in this course.")
+        self.check_object_permissions(self.request, content)
+        return content

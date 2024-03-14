@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  postgres:
+    image: filipeotaviomm/kanvas:v1
+    container_name: postgres-kanvas
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DBNAME}
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - django_net
+
+  django:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: django
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - 8000:8000
+    environment:
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_HOST: ${POSTGRES_HOST}
+      DB_NAME: ${POSTGRES_DBNAME}
+    networks:
+      - django_net
+
+networks:
+  django_net:
+    driver: bridge

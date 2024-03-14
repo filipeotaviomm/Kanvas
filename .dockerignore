@@ -1,0 +1,17 @@
+# Arquivos e diretórios gerados pelo Python
+__pycache__/
+*.pyc
+
+# Arquivos e diretórios gerados pelo Django
+db.sqlite3
+/static/
+/media/
+
+# Ambiente virtual Python
+venv/
+.venv/
+
+# Outros arquivos que não devem ser incluídos na imagem Docker
+*.log
+*.swp
+.DS_Store
